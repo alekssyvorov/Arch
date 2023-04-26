@@ -1,11 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from random import randint
 
 app = Flask(__name__)
 
 
-@app.route('/')
-@app.route('/home')
+@app.route('/', methods=['POST', 'GET'])
+@app.route('/home', methods=['POST', 'GET'])
 def index():
     # Для выполнения ДЗ, потом удалю
     global constant
@@ -14,10 +14,14 @@ def index():
     return render_template('index.html', constant=constant)
 
 @app.route('/hw2')
-def hw():
+def hwDelete():
+    '''
+    Функция удаляет со списка элемент и возвращает его, передает в рендер шаблона, где он выводится
+    :return: удаленный элемент списка
+    '''
     global constant
-    elem = constant.pop()
-    print(elem)
+    if len(constant):
+        elem = constant.pop()
     return render_template('hw2.html', elem=elem)
 
 
