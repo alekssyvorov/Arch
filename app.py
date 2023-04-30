@@ -1,39 +1,65 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from random import randint
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def get_lst():
-    return f'{constant}'
-
-
-@app.route('/post')
-def post_lst():
-    constant.append(randint(-100, 100))
-    return f'{constant}'
-
-
-@app.route('/dell')
-def dell_lst():
-    constant.pop()
-    return f'{constant}'
-
-
-def create_lst():
-    from random import randint
-    for i in range(10):
-        constant.append(randint(-50, 50))
-    return constant
-
-
-# Дальше уже пытаюсь сам что-то писать
 @app.route('/', methods=['POST', 'GET'])
 @app.route('/home', methods=['POST', 'GET'])
 def index():
-    # Для выполнения ДЗ, потом удалю
-    return render_template('index.html', constant=constant)
+    return render_template('index.html')
+
+
+class AddUser():
+    def __init__(self, login, password1, password2, email):
+        self.login = login
+        self.password1 = password1
+        self.password2 = password2
+        self.email = email
+
+    def check_login(self):
+        import string
+        flag = False
+        if len(self.login) > 5:
+            for s in self.login:
+                if s in string.ascii_letters:
+                    flag = True
+                else:
+                    flag = False
+                    break
+        return flag
+
+    def check_password(self):
+        if len(self.password1) > 5 and self.password1 == self.password2:
+            return True
+        else:
+            print('Пароли не совпадают')
+            return False
+
+    def check_email(self):
+        if self.email.count('@') == 1:
+            return True
+        else:
+            print('Емейл не содержит @')
+            return False
+
+    def saveUSer(self):
+        if self.check_login() and self.check_password() and self.check_email():
+            return True
+        else:
+            print('Данные не верны')
+
+@app.route('/registration-user', methods=['POST', 'GET'])
+def registration():
+    if request.method == "POST":
+        login = request.form['login']
+        password1 = request.form['password1']
+        password2 = request.form['password2']
+        email = request.form['email']
+        user = AddUser(login, password1, password2, email)
+
+
+    return render_template('registration-user.html')
 
 
 @app.route('/posts')
@@ -42,6 +68,4 @@ def posts():
 
 
 if __name__ == '__main__':
-    constant = []
-    constant = create_lst()
     app.run(host="0.0.0.0", port=10000, debug=True)
