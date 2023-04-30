@@ -16,7 +16,7 @@ class AddUser():
         self.password1 = password1
         self.password2 = password2
         self.email = email
-
+class Checker:
     def check_login(self):
         import string
         flag = False
@@ -69,3 +69,4 @@ def posts():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=10000, debug=True)
+
