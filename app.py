@@ -16,48 +16,53 @@ class AddUser():
         self.password1 = password1
         self.password2 = password2
         self.email = email
-class Checker:
-    def check_login(self):
-        import string
-        flag = False
-        if len(self.login) > 5:
-            for s in self.login:
-                if s in string.ascii_letters:
-                    flag = True
-                else:
-                    flag = False
-                    break
-        return flag
-
-    def check_password(self):
-        if len(self.password1) > 5 and self.password1 == self.password2:
-            return True
-        else:
-            print('Пароли не совпадают')
-            return False
-
-    def check_email(self):
-        if self.email.count('@') == 1:
-            return True
-        else:
-            print('Емейл не содержит @')
-            return False
-
-    def saveUSer(self):
-        if self.check_login() and self.check_password() and self.check_email():
-            return True
-        else:
-            print('Данные не верны')
 
 @app.route('/registration-user', methods=['POST', 'GET'])
 def registration():
     if request.method == "POST":
-        login = request.form['login']
-        password1 = request.form['password1']
-        password2 = request.form['password2']
-        email = request.form['email']
-        user = AddUser(login, password1, password2, email)
+        try:
+            login = request.form['login']
+            password1 = request.form['password1']
+            password2 = request.form['password2']
+            email = request.form['email']
+        except ValueError:
+            print('Данные не получены от формы лого/пасс')
 
+        def check_login(login):
+            import string
+            flag = False
+            if len(login) > 5:
+                for s in login:
+                    if s in string.ascii_letters:
+                        flag = True
+                    else:
+                        flag = False
+                        break
+            return flag
+        def check_password(password1, password2):
+            if len(password1) > 5 and password1 == password2:
+                return True
+            else:
+                print('Пароли не совпадают')
+                return False
+
+        def check_email(email):
+            if email.count('@') == 1:
+                return True
+            else:
+                print('Емейл не содержит @')
+                return False
+
+
+        if check_login(login) and check_password(password1, password2) and check_email(email):
+            user = AddUser(login, password1, password2, email)
+            dataUser = {}
+            dataUser['login'] = login
+            dataUser['password'] = password1
+            dataUser['email'] = email
+            print(dataUser)
+        else:
+            print('Данные не верны')
 
     return render_template('registration-user.html')
 
