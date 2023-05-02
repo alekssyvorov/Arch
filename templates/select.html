@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Выбор архива
+{% endblock %}
+
+{% block body %}
+<body class="text-center">
+<div class="container text-center">
+    <H2>Выберите архиватор</H2>
+    <form method="post">
+        <select name="archiv">
+            <option value="winrar" selected="winrar">Win Rar</option>
+            <option value="sevenzip">7 Zip</option>
+            <option value="no">Другой</option>
+        </select>
+        <br>
+        <input type="checkbox" name="download"> Скачать сразу
+        <br>
+        <input type="checkbox" name="cloud"> Сохранить в облаке
+        <br><input type="submit" value="Выполнить" class="btn btn-primary">
+
+    </form>
+</div>
+</body>
+{% endblock %}
